@@ -36,8 +36,8 @@ st.subheader("Data Summary")
 st.write(Health.describe())
 
 # Feature and Target selection
-X = Health.drop(columns=['target'])
-y = Health['target']
+X = Health.drop('Treatment', axis=1)
+y = Health['Treatment']
 
 # Data Split
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
