@@ -6,12 +6,15 @@ import seaborn as sns
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.svm import SVC
 from sklearn.metrics import classification_report, confusion_matrix, roc_curve, auc
 
 # Load Data
 st.title("Heart Attack Prediction App")
 
 @st.cache_data
+
 def load_data():
     data = pd.read_csv("heart_attack_dataset.csv")
     return data
@@ -19,6 +22,10 @@ def load_data():
 Health = load_data()
 st.subheader("Dataset Preview")
 st.dataframe(Health.head())
+
+# Display Column Names
+st.subheader("Column Names")
+st.write(Health.columns.tolist())
 
 # Null values
 st.subheader("Null Values")
@@ -40,8 +47,17 @@ scaler = StandardScaler()
 X_train_scaled = scaler.fit_transform(X_train)
 X_test_scaled = scaler.transform(X_test)
 
-# Model
-model = RandomForestClassifier()
+# Sidebar for model selection
+st.sidebar.title("Model Selection")
+model_option = st.sidebar.selectbox("Choose a model", ["Random Forest", "Logistic Regression", "Support Vector Machine"])
+
+if model_option == "Random Forest":
+    model = RandomForestClassifier()
+elif model_option == "Logistic Regression":
+    model = LogisticRegression()
+elif model_option == "Support Vector Machine":
+    model = SVC(probability=True)
+
 model.fit(X_train_scaled, y_train)
 y_pred = model.predict(X_test_scaled)
 
